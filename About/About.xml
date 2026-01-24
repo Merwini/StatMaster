@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+	<name>Stat Master</name>
+	<author>Nuff</author>
+	<packageId>nuff.statmaster</packageId>
+	<supportedVersions>
+		<li>1.6</li>
+	</supportedVersions>
+	<description>Adds a gizmo to your pawns that allows you to give them custom stat bonuses.</description>
+</ModMetaData>

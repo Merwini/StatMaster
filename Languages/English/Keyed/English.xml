@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<LanguageData>
+	<StatMaster_StatModsFor>Stat modifiers for {0}</StatMaster_StatModsFor>
+	<StatMaster_AddNewStatModifier>Add new stat modifier...</StatMaster_AddNewStatModifier>
+	<StatMaster_RemoveFrom>Remove from {0}</StatMaster_RemoveFrom>
+	<StatMaster_SelectAStat>Select a Stat.</StatMaster_SelectAStat>
+	<StatMaster_Done>Done</StatMaster_Done>
+	<StatMaster_Accept>Accept</StatMaster_Accept>
+	<StatMaster_Cancel>Cancel</StatMaster_Cancel>
+
+	<StatMaster_GizmoLabel>Edit stats</StatMaster_GizmoLabel>
+	<StatMaster_GizmoDesc>Open a window allowing you to edit {0}'s stats</StatMaster_GizmoDesc>
+</LanguageData>
