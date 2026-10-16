@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<HediffDef>
+		<defName>StatMaster_Hediff</defName>
+		<hediffClass>StatMaster.Hediff_StatMaster</hediffClass>
+		<label>custom stats</label>
+		<description>This person's stats have been customized.</description>
+		<isBad>false</isBad>
+	</HediffDef>
+</Defs>

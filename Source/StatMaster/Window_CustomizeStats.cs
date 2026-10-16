@@ -59,10 +59,6 @@ namespace StatMaster
                 ? hediff.statDictionary.Keys.Where(k => k != null).ToList()
                 : new List<StatDef>();
 
-            for (int i = buffers.Keys.Count - 1; i >= 0; i--)
-            {
-                break;
-            }
             var stale = buffers.Keys.Where(k => !statKeys.Contains(k)).ToList();
             for (int i = 0; i < stale.Count; i++)
                 buffers.Remove(stale[i]);

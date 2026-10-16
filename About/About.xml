@@ -5,6 +5,7 @@
 	<packageId>nuff.statmaster</packageId>
 	<supportedVersions>
 		<li>1.6</li>
+		<li>1.7</li>
 	</supportedVersions>
 	<description>Adds a gizmo to your pawns that allows you to give them custom stat bonuses.</description>
 </ModMetaData>
