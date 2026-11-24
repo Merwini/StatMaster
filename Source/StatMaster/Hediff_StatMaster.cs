@@ -6,69 +6,98 @@ using System.Threading.Tasks;
 using Verse;
 using RimWorld;
 
-namespace StatMaster
+namespace StatMaster;
+
+public class Hediff_StatMaster : Hediff
 {
-    public class Hediff_StatMaster : Hediff
+    internal Dictionary<StatDef, float> statDictionary = new();
+
+    internal static Dictionary<StatDef, float> clipboardDictionary = new();
+
+    private HediffStage curStage;
+
+    bool markedToRemove = false;
+
+    public override bool ShouldRemove => markedToRemove;
+
+    public override HediffStage CurStage
     {
-        internal Dictionary<StatDef, float> statDictionary = new Dictionary<StatDef, float>();
-
-        private HediffStage curStage;
-
-        bool markedToRemove = false;
-
-        public override bool ShouldRemove => markedToRemove;
-
-        public override HediffStage CurStage
+        get
         {
-            get
+            if (curStage == null)
             {
-                if (curStage == null)
-                {
-                    List<StatModifier> modifiers = BuildStatModifiers();
+                List<StatModifier> modifiers = BuildStatModifiers();
 
-                    curStage = new HediffStage();
-                    curStage.statOffsets = modifiers;
-                }
-                return curStage;
+                curStage = new HediffStage();
+                curStage.statOffsets = modifiers;
+            }
+            return curStage;
+        }
+    }
+
+    public Hediff_StatMaster()
+    {
+    }
+
+    private List<StatModifier> BuildStatModifiers()
+    {
+        List<StatModifier> newMods = new List<StatModifier>();
+
+        foreach (var kvp in statDictionary)
+        {
+            if (kvp.Value != 0)
+            {
+                StatModifier sm = new StatModifier();
+                sm.stat = kvp.Key;
+                sm.value = kvp.Value;
+                newMods.Add(sm);
             }
         }
 
-        public Hediff_StatMaster()
-        {
-        }
+        return newMods;
+    }
 
-        private List<StatModifier> BuildStatModifiers()
-        {
-            List<StatModifier> newMods = new List<StatModifier>();
+    public void ClearCachedStage()
+    {
+        curStage = null;
+    }
 
-            foreach (var kvp in statDictionary)
-            {
-                if (kvp.Value != 0)
-                {
-                    StatModifier sm = new StatModifier();
-                    sm.stat = kvp.Key;
-                    sm.value = kvp.Value;
-                    newMods.Add(sm);
-                }
-            }
+    public void MarkForRemoval()
+    {
+        markedToRemove = true;
+    }
 
-            return newMods;
-        }
+    public bool CopyToClipboard()
+    {
+        if (statDictionary.NullOrEmpty())
+            return false;
 
-        public void ClearCachedStage()
-        {
-            curStage = null;
-        }
+        clipboardDictionary = statDictionary.ToDictionary(
+            entry => entry.Key,
+            entry => entry.Value
+        );
 
-        public void MarkForRemoval()
-        {
-            markedToRemove = true;
-        }
+        return true;
+    }
 
-        public override void ExposeData()
-        {
-            base.ExposeData();
-            Scribe_Collections.Look(ref statDictionary, "statDictionary");
-        }
+    public bool PasteFromClipboard()
+    {
+        if (clipboardDictionary.NullOrEmpty())
+            return false;
+
+        statDictionary = clipboardDictionary.ToDictionary(
+        entry => entry.Key,
+        entry => entry.Value
+        );
+
+        ClearCachedStage();
+
+        return true;
+    }
+
+    public override void ExposeData()
+    {
+        base.ExposeData();
+        Scribe_Collections.Look(ref statDictionary, "statDictionary");
     }
 }

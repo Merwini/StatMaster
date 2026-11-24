@@ -9,6 +9,19 @@
 	<StatMaster_Accept>Accept</StatMaster_Accept>
 	<StatMaster_Cancel>Cancel</StatMaster_Cancel>
 
+	<StatMaster_Remove>Remove</StatMaster_Remove>
+	<StatMaster_ConfirmRemove1>Are you sure you want to remove StatMaster stats?</StatMaster_ConfirmRemove1>
+	<StatMaster_ConfirmRemove2>This can't be undone.</StatMaster_ConfirmRemove2>
+	<StatMaster_ConfirmRemove3>(stats will be removed when the game is unpaused)</StatMaster_ConfirmRemove3>
+
+	<StatMaster_Overwrite>Overwrite</StatMaster_Overwrite>
+	<StatMaster_CopyStats>Copy stats</StatMaster_CopyStats>
+	<StatMaster_CantCopy>Can't copy an empty stat list</StatMaster_CantCopy>
+	<StatMaster_CopiedToClipboard>Stats copied to clipboard</StatMaster_CopiedToClipboard>
+	<StatMaster_PasteStats>Paste stats</StatMaster_PasteStats>
+	<StatMaster_PastedFromClipboard>Stats pasted from clipboard</StatMaster_PastedFromClipboard>
+	<StatMaster_ConfirmOverwrite>Are you sure you want to overwrite stats with ones from clipboard?</StatMaster_ConfirmOverwrite>
+
 	<StatMaster_GizmoLabel>Edit stats</StatMaster_GizmoLabel>
 	<StatMaster_GizmoDesc>Open a window allowing you to edit {0}'s stats</StatMaster_GizmoDesc>
 </LanguageData>

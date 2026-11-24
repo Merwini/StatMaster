@@ -16,7 +16,8 @@ namespace StatMaster
 
         private Vector2 scrollPos;
         private float viewHeight;
-        private readonly Dictionary<StatDef, string> buffers = new Dictionary<StatDef, string>();
+        private readonly Dictionary<StatDef, string> buffers = new();
+        private bool clearBuffers = false;
 
         private const float RowHeight = 32f;
         private const float ButtonHeight = 35f;
@@ -50,10 +51,16 @@ namespace StatMaster
 
             float curY = headerRect.yMax + Gap;
 
-            Rect bottomButtonsRect = new Rect(inRect.x, inRect.yMax - ButtonHeight, inRect.width, ButtonHeight);
+            Rect bottomButtonsRect = new Rect(inRect.x, inRect.yMax - (ButtonHeight * 2), inRect.width, ButtonHeight * 2);
 
             Rect scrollOuter = new Rect(inRect.x, curY, inRect.width, bottomButtonsRect.yMin - curY - Gap);
             Rect scrollView = new Rect(0f, 0f, scrollOuter.width - 16f, viewHeight);
+
+            if (clearBuffers)
+            {
+                buffers.Clear();
+                clearBuffers = false;
+            }
 
             List<StatDef> statKeys = hediff.statDictionary != null
                 ? hediff.statDictionary.Keys.Where(k => k != null).ToList()
@@ -61,7 +68,9 @@ namespace StatMaster
 
             var stale = buffers.Keys.Where(k => !statKeys.Contains(k)).ToList();
             for (int i = 0; i < stale.Count; i++)
+            {
                 buffers.Remove(stale[i]);
+            }
 
             float innerY = 0f;
             StatDef removeStat = null;
@@ -152,8 +161,37 @@ namespace StatMaster
         {
             float half = (rect.width - Gap) / 2f;
 
-            Rect closeRect = new Rect(rect.x, rect.y, half, rect.height);
-            Rect removeRect = new Rect(closeRect.xMax + Gap, rect.y, half, rect.height);
+            Rect copyRect = new Rect(rect.x, rect.y, half, rect.height / 2);
+            Rect pasteRect = new Rect(copyRect.xMax + Gap, rect.y, half, rect.height / 2);
+            Rect closeRect = new Rect(rect.x, rect.y + 35, half, rect.height / 2);
+            Rect removeRect = new Rect(closeRect.xMax + Gap, rect.y + 35, half, rect.height / 2);
+
+            if (Widgets.ButtonText(copyRect, "StatMaster_CopyStats".Translate()))
+            {
+                if (hediff.CopyToClipboard())
+                {
+                    Messages.Message("StatMaster_CopiedToClipboard".Translate(), MessageTypeDefOf.NeutralEvent);
+                }
+                else
+                {
+                    Messages.Message("StatMaster_CantCopy".Translate(), MessageTypeDefOf.RejectInput);
+                }
+            }
+
+            bool active = !Hediff_StatMaster.clipboardDictionary.NullOrEmpty();
+            if (Widgets.ButtonText(pasteRect, "StatMaster_PasteStats".Translate(), active: active))
+            {
+                if (!hediff.statDictionary.NullOrEmpty())
+                {
+                    SoundDefOf.ExecuteTrade.PlayOneShotOnCamera();
+                    Find.WindowStack.Add(new Window_ConfirmOverwrite(hediff, this));
+                }
+                else
+                {
+                    SoundDefOf.ExecuteTrade.PlayOneShotOnCamera();
+                    hediff.PasteFromClipboard();
+                }
+            }
 
             if (Widgets.ButtonText(closeRect, "StatMaster_Done".Translate()))
             {
@@ -165,8 +203,8 @@ namespace StatMaster
             GUI.color = new Color(1f, 0.6f, 0.6f);
             if (Widgets.ButtonText(removeRect, "StatMaster_RemoveFrom".Translate(hediff.pawn.LabelShortCap)))
             {
-                hediff.MarkForRemoval();
                 SoundDefOf.ExecuteTrade.PlayOneShotOnCamera();
+                Find.WindowStack.Add(new Window_ConfirmRemove(hediff));
                 Close();
             }
             GUI.color = old;
@@ -177,6 +215,11 @@ namespace StatMaster
         {
             base.PreClose();
             hediff.ClearCachedStage();
+        }
+
+        public void ClearBuffers()
+        {
+            clearBuffers = true;
         }
     }
 }
